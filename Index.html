@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Government Higher Secondary School Pirsabaq Nowshera | Attendance</title>
+<meta name="theme-color" content="#102b55">
+<meta name="description" content="Government Higher Secondary School Pirsabaq Nowshera QR Attendance System">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef3fa;color:#172c4b;font:15px system-ui,sans-serif}header{background:#103b70;color:white;padding:18px}header h2{margin:0}.wrap{max-width:1050px;margin:auto;padding:14px}.card{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 2px 12px #1232}input,button{font:inherit;padding:11px;border-radius:9px;border:1px solid #ccd5e2}input{width:100%;margin:5px 0 10px}button{background:#145cb1;color:white;border:0;cursor:pointer;margin:3px}button.secondary{background:#526477}button:disabled{opacity:.5}nav{display:flex;flex-wrap:wrap;gap:5px}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}.stat{font-size:27px;font-weight:700}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #e2e8f1;padding:9px;text-align:right}.scroll{overflow:auto}video{max-width:100%;width:350px;border-radius:12px;background:#111}#qrCanvas{max-width:100%;image-rendering:pixelated}#notice{position:fixed;bottom:12px;right:12px;left:12px;background:#12395e;color:white;padding:12px;border-radius:10px;display:none;z-index:5}label{display:block;margin-top:8px;font-weight:600}.hint{font-size:12px;color:#667}hr{border:0;border-top:1px solid #e2e8f1;margin:18px 0}
+@media print{header,nav,form,#studentRows,#prev,#next,#notice,#printQR{display:none!important}#qrArea{display:block!important;box-shadow:none}}
+
+/* Student ID card — printable, full color */
+#qrArea{max-width:440px;margin:20px auto;background:transparent;box-shadow:none;padding:0}
+.id-card{width:100%;max-width:390px;aspect-ratio:1.58;margin:auto;border-radius:18px;overflow:hidden;background:linear-gradient(145deg,#ffffff 0%,#eaf6ff 67%,#c8eaff 100%);border:2px solid #1267b7;box-shadow:0 10px 25px #163e6730;color:#12315a;direction:ltr;position:relative}
+.id-top{background:linear-gradient(100deg,#0b356e,#087cc3,#08a4ba);color:#fff;text-align:center;padding:12px 8px 10px;border-bottom:4px solid #f6bd39}
+.id-top strong{display:block;font-size:12px;line-height:1.35;letter-spacing:.3px}.id-top small{display:block;font-size:10px;letter-spacing:1.8px}
+.id-body{display:grid;grid-template-columns:82px minmax(0,1fr) 95px;gap:8px;align-items:center;padding:12px 10px}
+.id-photo{width:78px;height:94px;object-fit:cover;border-radius:9px;border:3px solid #fff;box-shadow:0 1px 6px #2357a544;background:#dbe6f0}
+.id-info{min-width:0;font-size:11px;line-height:1.65;overflow-wrap:anywhere}.id-info strong{display:block;font-size:15px;color:#073e80;line-height:1.4}.id-info b{color:#0b559a}
+#qrCanvas{width:90px;height:90px;image-rendering:pixelated;background:white;border:4px solid white;border-radius:7px}
+.id-foot{position:absolute;bottom:0;left:0;right:0;background:#0b356e;color:#fff;text-align:center;padding:5px;font-size:9px;letter-spacing:1px}
+#idActions{text-align:center;margin-top:12px}
+@media print{ @page{size:A4;margin:12mm}body{background:white!important}body *{visibility:hidden!important}#qrArea,#qrArea *{visibility:visible!important}#qrArea{display:block!important;position:absolute;left:10mm;top:10mm;width:90mm;max-width:none;margin:0!important}#idActions{display:none!important}.id-card{-webkit-print-color-adjust:exact;print-color-adjust:exact;box-shadow:none!important;border:2px solid #1267b7!important}}
+
+/* Professional GHSS Pirsabaq interface */
+:root{--navy:#102b55;--blue:#1765ad;--teal:#087f83;--line:#dfe8f3;--ink:#172d4d}
+body{background:linear-gradient(155deg,#eaf1fa,#f6f9fe 58%,#edf6f7);color:var(--ink);font-family:system-ui,"Noto Nastaliq Urdu",sans-serif;line-height:1.6}
+header{padding:24px 18px;background:linear-gradient(110deg,#0b274c,#12578e 65%,#078b9b);box-shadow:0 5px 20px #102b5525;border-bottom:4px solid #eabf55}
+header h2{font-size:clamp(17px,3.4vw,27px);letter-spacing:.15px;line-height:1.4}header small{opacity:.9}
+.wrap{max-width:1160px;padding:16px}
+.card{border:1px solid #e3eaf3;border-radius:18px;padding:clamp(14px,3vw,24px);box-shadow:0 8px 30px #203e6410;margin:15px 0}
+.card h3{margin:0 0 16px;font-size:19px;color:#133f70;border-right:4px solid #18a3aa;padding-right:10px}
+input{background:#fbfdff;border:1px solid #cbd8e8;outline:0;transition:.2s;min-height:44px}
+input:focus{border-color:#1472bc;box-shadow:0 0 0 3px #1472bc20}
+button{border-radius:10px;background:linear-gradient(115deg,#155b9d,#197fc0);font-weight:650;min-height:39px;transition:transform .15s,filter .15s}
+button:active{transform:scale(.98)}button:hover{filter:brightness(1.05)}button.secondary{background:#53657b}
+button.danger{background:#bc3448}button.restore{background:#087e70}
+nav{gap:8px}nav button{padding:10px 14px}nav button.active{background:#06396b;box-shadow:inset 0 -3px #f6bd39}
+.stat{font-size:32px;color:#0e548e;line-height:1.2;margin-top:5px}
+#dashboard .grid>div{border:1px solid #dbe8f3;border-radius:14px;padding:16px;background:linear-gradient(145deg,#fff,#f3f9ff)}
+.scroll{border:1px solid var(--line);border-radius:12px}th{background:#eaf3fc;color:#24486d;white-space:nowrap}td{vertical-align:middle}tbody tr:nth-child(even){background:#f7fafd}tbody tr:hover{background:#eef8ff}
+.status-pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.status-active{color:#086c50;background:#dff7ed}.status-left{color:#a52c41;background:#ffebee}
+#studentCount{font-weight:650;color:#24567f}#notice{max-width:620px;margin:auto;box-shadow:0 8px 25px #071b3b44}
+.id-card{box-shadow:0 15px 32px #102b5530}
+@media(max-width:540px){.wrap{padding:10px}.card{padding:14px}nav button{flex:1 1 42%;font-size:13px}td,th{padding:8px 7px}header{padding:20px 13px}}
+@media print{header{display:none!important}}
+</style></head><body>
+<header><h2>Government Higher Secondary School Pirsabaq Nowshera</h2><small>Online QR Attendance • Firebase</small></header><div class="wrap">
+<section id="setup" class="card hidden"><h3>Firebase Configuration</h3><p>Firebase configuration درست کریں اور ایپ HTTPS Hosting پر کھولیں۔</p></section>
+<section id="login" class="card hidden"><h3>استاد / ایڈمن لاگ اِن</h3><form id="loginForm"><label>Email</label><input id="email" type="email" autocomplete="username" required dir="ltr"><label>Password</label><input id="password" type="password" autocomplete="current-password" required><button id="loginBtn">Login</button></form></section>
+<div id="app" class="hidden"><div class="card"><div id="who"></div><nav><button data-tab="dashboard">Dashboard</button><button data-tab="students" id="studentsTab">Students</button><button data-tab="scanner">QR Scanner</button><button data-tab="reports">Reports</button><button id="logout" class="secondary">Logout</button></nav></div>
+<section id="dashboard" class="card tab"><h3>آج کی حاضری <span id="today"></span></h3><div class="grid"><div>کل طلبہ<div id="total" class="stat">0</div></div><div>حاضر<div id="present" class="stat">0</div></div><div>غیر حاضر<div id="absent" class="stat">0</div></div></div></section>
+<section id="students" class="card tab hidden"><h3 id="studentFormTitle">نیا طالب علم (صرف Admin)</h3><form id="studentForm"><div class="grid"><div><label>نام</label><input id="name" required maxlength="100"></div><div><label>رول نمبر (منفرد)</label><input id="roll" required maxlength="40"></div><div><label>کلاس</label><input id="className" required maxlength="40"></div><div><label>سیکشن</label><input id="section" maxlength="40"></div><div><label>طالب علم کی تصویر</label><input id="studentPhoto" type="file" accept="image/*"><small class="hint">تصویر خودکار طور پر چھوٹی کی جائے گی (اختیاری)</small></div></div><button id="saveStudentBtn" type="submit">Save Student</button><button id="cancelEdit" type="button" class="secondary hidden">Cancel Edit</button><p id="editHint" class="hint hidden">رول نمبر تبدیل نہیں کیا جا سکتا کیونکہ QR Code اور پرانی حاضری اسی شناخت سے منسلک ہیں۔</p></form><hr><label>طلبہ تلاش کریں</label><input id="search" placeholder="نام، رول نمبر، کلاس"><label style="font-weight:400"><input id="showFormer" type="checkbox" style="width:auto"> خارج شدہ طلبہ بھی دکھائیں</label><p id="studentCount"></p><div class="scroll"><table><thead><tr><th>رول</th><th>نام</th><th>کلاس</th><th>سیکشن</th><th>حالت</th><th>ID Card</th><th>انتظام</th></tr></thead><tbody id="studentRows"></tbody></table></div><button id="prev">پچھلا</button><span id="pageLabel"></span><button id="next">اگلا</button><div id="qrArea" class="hidden"><div class="id-card"><div class="id-top"><strong>GOVERNMENT HIGHER SECONDARY SCHOOL<br>PIRSABAQ, NOWSHERA</strong><small>OFFICIAL STUDENT ID CARD</small></div><div class="id-body"><img id="idPhoto" class="id-photo" alt="Student photo"><div class="id-info"><strong id="qrName"></strong><div><b>Roll:</b> <span id="idRoll"></span></div><div><b>Class:</b> <span id="idClass"></span></div><div><b>Section:</b> <span id="idSection"></span></div></div><canvas id="qrCanvas"></canvas></div><div class="id-foot">SCAN QR FOR ATTENDANCE • GHSS PIRSABAQ</div></div><div id="idActions"><button id="downloadPNG" type="button">Download PNG</button><button id="downloadPDF" type="button">Download PDF</button><button id="printQR" type="button" class="secondary">Print Color ID Card</button></div></div></section>
+<section id="scanner" class="card tab hidden"><h3>QR Scanner</h3><p class="hint">کیمرہ کے لیے HTTPS یا localhost ضروری ہے۔</p><button id="start">Start Camera</button><button id="stop" class="secondary">Stop Camera</button><div><video id="video" autoplay muted playsinline></video></div><p id="lastScan">ابھی کوئی اسکین نہیں ہوا</p><label>رول نمبر سے حاضری</label><form id="manualForm"><input id="manualRoll" placeholder="رول نمبر" required><button>Mark Present</button></form></section>
+<section id="reports" class="card tab hidden"><h3>Attendance Report</h3><div class="grid"><div><label>تاریخ</label><input id="reportDate" type="date"></div><div><label>کلاس فلٹر</label><input id="reportClass" placeholder="تمام کلاسیں"></div></div><button id="loadReport">Load Report</button><button id="export">Download CSV</button><p id="reportSummary"></p><div class="scroll"><table><thead><tr><th>رول</th><th>نام</th><th>کلاس</th><th>سیکشن</th><th>حالت</th><th>وقت</th></tr></thead><tbody id="reportRows"></tbody></table></div></section>
+</div></div><div id="notice"></div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script type="module">
+// Repository: https://github.com/saifullah231/saif-school-v2
+// GitHub Pages: https://saifullah231.github.io/saif-school-v2/
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {getFirestore,collection,doc,getDocs,getDoc,runTransaction,query,where,updateDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+const FIREBASE_CONFIG={apiKey:"AIzaSyCi3yfZrz9vrBqcJZXh4hyP8t0KVKYTHho",authDomain:"saif-school-attendance.firebaseapp.com",projectId:"saif-school-attendance",storageBucket:"saif-school-attendance.firebasestorage.app",messagingSenderId:"115470426982",appId:"1:115470426982:web:f658ac35ef2a009ca0dea7",measurementId:"G-BSKTVHQYH9"};
+const $=id=>document.getElementById(id);let selectedCardStudent=null,editingStudentId=null;let db,auth,role=null,students=[],records=[],page=0,stream=null,frame=0,scanning=false,lastCode='',lastTime=0,marking=false;
+const dateKey=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+function notice(s){$('notice').textContent=s;$('notice').style.display='block';clearTimeout(notice.timer);notice.timer=setTimeout(()=>$('notice').style.display='none',4500)}
+function err(e){console.error(e);notice(e?.message||String(e))}
+function stopCamera(){scanning=false;if(frame)cancelAnimationFrame(frame);frame=0;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('video').srcObject=null}
+function tab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('hidden',x.id!==id));if(id==='dashboard')loadDashboard().catch(err);if(id==='students')loadStudents().catch(err);if(id==='reports')loadReport().catch(err);if(id!=='scanner')stopCamera()}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));tab(b.dataset.tab)});$('reportDate').value=dateKey();$('today').textContent=dateKey();
+try{const app=initializeApp(FIREBASE_CONFIG);db=getFirestore(app);auth=getAuth(app);onAuthStateChanged(auth,async u=>{if(!u){role=null;stopCamera();$('app').classList.add('hidden');$('login').classList.remove('hidden');return}try{const t=await getDoc(doc(db,'teachers',u.uid));if(!t.exists()||!['admin','teacher'].includes(t.data().role)){await signOut(auth);throw Error('یہ اکاؤنٹ مجاز نہیں۔ ایڈمن سے رابطہ کریں۔')}role=t.data().role;$('login').classList.add('hidden');$('app').classList.remove('hidden');$('who').textContent=`Login: ${u.email||u.uid} | Role: ${role}`;$('studentsTab').classList.toggle('hidden',role!=='admin');$('studentForm').classList.toggle('hidden',role!=='admin');await loadStudents();await loadDashboard()}catch(e){err(e)}})}catch(e){$('setup').classList.remove('hidden');err(e)}
+$('loginForm').onsubmit=async e=>{e.preventDefault();$('loginBtn').disabled=true;try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(e){err(e)}finally{$('loginBtn').disabled=false}};$('logout').onclick=()=>signOut(auth).catch(err);
+function studentId(roll){return encodeURIComponent(roll.trim().toLowerCase()).replace(/\./g,'%2E')}
+async function loadStudents(){let snap=await getDocs(collection(db,'students'));students=snap.docs.map(x=>({id:x.id,...x.data()}));students.sort((a,b)=>String(a.roll||'').localeCompare(String(b.roll||''),undefined,{numeric:true}));renderStudents()}
+function renderStudents(){let s=$('search').value.trim().toLowerCase(),items=students.filter(x=>($('showFormer').checked||x.status!=='left')&&[x.name,x.roll,x.className,x.section].some(v=>String(v||'').toLowerCase().includes(s))),pages=Math.max(1,Math.ceil(items.length/30));page=Math.max(0,Math.min(page,pages-1));$('studentRows').replaceChildren();for(let x of items.slice(page*30,page*30+30)){let tr=document.createElement('tr');for(let v of [x.roll,x.name,x.className,x.section]){let td=document.createElement('td');td.textContent=v||'';tr.append(td)}let statusTd=document.createElement('td'),pill=document.createElement('span');pill.className='status-pill '+(x.status==='left'?'status-left':'status-active');pill.textContent=x.status==='left'?'خارج شدہ':'فعال';statusTd.append(pill);tr.append(statusTd);let td=document.createElement('td'),b=document.createElement('button');b.textContent='ID Card';b.disabled=x.status==='left';b.onclick=()=>showQR(x);td.append(b);tr.append(td);let action=document.createElement('td'),edit=document.createElement('button');edit.textContent='تفصیلات ایڈٹ کریں';edit.className='secondary';edit.disabled=role!=='admin';edit.onclick=()=>startEditStudent(x);action.append(edit);let change=document.createElement('button');change.textContent=x.status==='left'?'بحال کریں':'خارج کریں';change.className=x.status==='left'?'restore':'danger';change.disabled=role!=='admin';change.title=role!=='admin'?'صرف Admin':'طالب علم کا اسٹیٹس تبدیل کریں';change.onclick=()=>changeStudentStatus(x);action.append(change);tr.append(action);$('studentRows').append(tr)}$('studentCount').textContent='کل نتائج: '+items.length;$('pageLabel').textContent=` ${page+1} / ${pages} `;$('prev').disabled=page===0;$('next').disabled=page===pages-1}
+$('showFormer').onchange=()=>{page=0;renderStudents()};$('search').oninput=()=>{page=0;renderStudents()};$('prev').onclick=()=>{page--;renderStudents()};$('next').onclick=()=>{page++;renderStudents()};
+async function changeStudentStatus(s){
+  if(role!=='admin')return notice('صرف Admin یہ کارروائی کر سکتا ہے');
+  const leaving=s.status!=='left';
+  const message=leaving?`${s.name} (${s.roll}) کو اسکول سے خارج کریں؟ پرانی حاضری محفوظ رہے گی اور نئی حاضری بند ہو جائے گی۔`:`${s.name} (${s.roll}) کو دوبارہ فعال کریں؟`;
+  if(!confirm(message))return;
+  let reason='';
+  if(leaving){reason=prompt('اخراج کی وجہ (اختیاری):','اسکول چھوڑ دیا');if(reason===null)return;reason=reason.trim().slice(0,200)}
+  try{
+    const ref=doc(db,'students',s.id);
+    await updateDoc(ref,leaving?{status:'left',leftAt:serverTimestamp(),leftDate:dateKey(),leftReason:reason,leftBy:auth.currentUser.uid}:{status:'active',rejoinedAt:serverTimestamp(),rejoinedBy:auth.currentUser.uid});
+    if(selectedCardStudent?.id===s.id&&leaving){selectedCardStudent=null;$('qrArea').classList.add('hidden')}
+    await loadStudents();notice(leaving?'طالب علم خارج کر دیا گیا':'طالب علم دوبارہ فعال ہوگیا');
+  }catch(e){err(e)}
+}
+async function compressPhoto(file){if(!file)return '';if(!file.type.startsWith('image/'))throw Error('صرف تصویر منتخب کریں');if(file.size>8*1024*1024)throw Error('تصویر 8MB سے کم ہونی چاہیے');const bitmap=await createImageBitmap(file);let ratio=Math.min(1,260/Math.max(bitmap.width,bitmap.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(bitmap.width*ratio));c.height=Math.max(1,Math.round(bitmap.height*ratio));c.getContext('2d').drawImage(bitmap,0,0,c.width,c.height);bitmap.close();let data=c.toDataURL('image/jpeg',.65);if(data.length>110000)throw Error('تصویر بہت بڑی ہے، چھوٹی تصویر استعمال کریں');return data}
+function resetStudentEditor(){editingStudentId=null;$('studentForm').reset();$('roll').readOnly=false;$('studentFormTitle').textContent='نیا طالب علم (صرف Admin)';$('saveStudentBtn').textContent='Save Student';$('cancelEdit').classList.add('hidden');$('editHint').classList.add('hidden')}
+function startEditStudent(s){
+ if(role!=='admin')return notice('صرف Admin تفصیلات تبدیل کر سکتا ہے');
+ editingStudentId=s.id;
+ $('name').value=s.name||'';$('roll').value=s.roll||'';$('className').value=s.className||'';$('section').value=s.section||'';
+ $('studentPhoto').value='';$('roll').readOnly=true;
+ $('studentFormTitle').textContent='طالب علم کی تفصیلات میں ترمیم: '+(s.name||s.roll);
+ $('saveStudentBtn').textContent='Save Changes';$('cancelEdit').classList.remove('hidden');$('editHint').classList.remove('hidden');
+ $('studentForm').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('cancelEdit').onclick=resetStudentEditor;
+$('studentForm').onsubmit=async e=>{
+ e.preventDefault();if(role!=='admin')return notice('صرف Admin طالب علم شامل یا تبدیل کرسکتا ہے');
+ const btn=$('saveStudentBtn');btn.disabled=true;
+ try{
+  const s={name:$('name').value.trim(),roll:$('roll').value.trim(),className:$('className').value.trim(),section:$('section').value.trim()};
+  if(!s.name||!s.roll||!s.className)throw Error('نام، رول نمبر اور کلاس ضروری ہیں');
+  const photoFile=$('studentPhoto').files[0];
+  if(editingStudentId){
+   const id=editingStudentId,old=students.find(x=>x.id===id);
+   if(!old)throw Error('طالب علم کا ریکارڈ نہیں ملا');
+   // Keep document ID and roll unchanged so historical attendance and QR remain valid.
+   if(s.roll!==old.roll)throw Error('رول نمبر تبدیل نہیں کیا جا سکتا');
+   const changes={name:s.name,className:s.className,section:s.section,updatedAt:serverTimestamp(),updatedBy:auth.currentUser.uid};
+   if(photoFile)changes.photo=await compressPhoto(photoFile);
+   await updateDoc(doc(db,'students',id),changes);
+   await loadStudents();const updated=students.find(x=>x.id===id);
+   if(selectedCardStudent?.id===id&&updated)showQR(updated);
+   resetStudentEditor();notice('طالب علم کی تفصیلات کامیابی سے اپڈیٹ ہوگئیں');
+  }else{
+   if(photoFile)s.photo=await compressPhoto(photoFile);else s.photo='';
+   const ref=doc(db,'students',studentId(s.roll));
+   await runTransaction(db,async tx=>{const old=await tx.get(ref);if(old.exists())throw Error('یہ رول نمبر پہلے سے موجود ہے');tx.set(ref,s)});
+   resetStudentEditor();await loadStudents();showQR(students.find(x=>x.id===ref.id));notice('طالب علم محفوظ ہوگیا');
+  }
+ }catch(e){err(e)}finally{btn.disabled=false}
+};
+function showQR(s){if(!s)return notice('طالب علم نہیں ملا');selectedCardStudent=s;if(typeof qrcode!=='function')return notice('QR library load نہیں ہوئی');try{$('qrArea').classList.remove('hidden');$('qrName').textContent=s.name||'';$('idRoll').textContent=s.roll||'';$('idClass').textContent=s.className||'';$('idSection').textContent=s.section||'—';const img=$('idPhoto');if(s.photo&&s.photo.startsWith('data:image/')){img.src=s.photo}else{img.src='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="120"><rect width="100" height="120" fill="#dbe6f0"/><circle cx="50" cy="39" r="19" fill="#8fa8c1"/><path d="M16 105Q18 67 50 67Q82 67 84 105" fill="#8fa8c1"/></svg>')}let qr=qrcode(0,'M');qr.addData('SAIFATT1:'+s.id);qr.make();let n=qr.getModuleCount(),canvas=$('qrCanvas'),scale=5,pad=4;canvas.width=canvas.height=(n+pad*2)*scale;let c=canvas.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,canvas.width,canvas.height);c.fillStyle='#000';for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(qr.isDark(y,x))c.fillRect((x+pad)*scale,(y+pad)*scale,scale,scale);$('qrArea').scrollIntoView({behavior:'smooth'})}catch(e){err(e)}}
+// Capture the visible ID card only (not the entire page) at print-quality resolution.
+async function captureIDCard(){
+  if(!selectedCardStudent)throw Error('پہلے کسی طالب علم کا ID Card کھولیں');
+  if(typeof window.html2canvas!=='function')throw Error('PNG/PDF library لوڈ نہیں ہوئی۔ انٹرنیٹ چیک کریں');
+  const img=$('idPhoto');
+  if(img && !img.complete)await new Promise((resolve,reject)=>{img.addEventListener('load',resolve,{once:true});img.addEventListener('error',reject,{once:true})});
+  if(document.fonts?.ready)await document.fonts.ready;
+  return await window.html2canvas(document.querySelector('.id-card'),{
+    scale:3,backgroundColor:'#ffffff',useCORS:true,logging:false
+  });
+}
+function cardFilename(extension){
+  const roll=String(selectedCardStudent?.roll||'student').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,45);
+  return `GHSS-PIRSABAQ-ID-${roll}.${extension}`;
+}
+function saveBlob(blob,filename){
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
+}
+async function downloadCard(kind){
+  const button=$(kind==='png'?'downloadPNG':'downloadPDF');
+  button.disabled=true;
+  try{
+    const canvas=await captureIDCard();
+    if(kind==='png'){
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+      if(!blob)throw Error('PNG فائل تیار نہیں ہوئی');
+      saveBlob(blob,cardFilename('png'));
+    }else{
+      if(!window.jspdf?.jsPDF)throw Error('PDF library لوڈ نہیں ہوئی۔ انٹرنیٹ چیک کریں');
+      const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:[86,54],compress:true});
+      const data=canvas.toDataURL('image/png');
+      // Fit card inside standard ID-1 card dimensions without cropping.
+      const width=86,height=54,ratio=Math.min(width/canvas.width,height/canvas.height);
+      const drawW=canvas.width*ratio,drawH=canvas.height*ratio;
+      pdf.addImage(data,'PNG',(width-drawW)/2,(height-drawH)/2,drawW,drawH);
+      pdf.save(cardFilename('pdf'));
+    }
+    notice(kind.toUpperCase()+' ID Card ڈاؤن لوڈ شروع ہوگیا');
+  }catch(e){err(e)}finally{button.disabled=false}
+}
+$('downloadPNG').onclick=()=>downloadCard('png');
+$('downloadPDF').onclick=()=>downloadCard('pdf');
+$('printQR').onclick=()=>window.print();
+async function mark(id){if(!auth.currentUser)throw Error('پہلے Login کریں');if(!['admin','teacher'].includes(role))throw Error('اکاؤنٹ حاضری درج کرنے کا مجاز نہیں');let day=dateKey(),ref=doc(db,'attendance',day+'_'+id),teacherUid=auth.currentUser.uid;let result=await runTransaction(db,async tx=>{let student=await tx.get(doc(db,'students',id));let existing=await tx.get(ref);if(!student.exists())throw Error('یہ طالب علم رجسٹرڈ نہیں');if(student.data().status==='left')throw Error('یہ طالب علم اسکول چھوڑ چکا ہے، حاضری نہیں لگ سکتی');if(existing.exists())return{duplicate:true,name:student.data().name};tx.set(ref,{studentId:id,date:day,time:new Date().toISOString(),teacherUid,status:'Present'});return{name:student.data().name}});$('lastScan').textContent=result.name+(result.duplicate?' — پہلے سے حاضر':' — حاضر ✓');notice(result.duplicate?'آج حاضری پہلے سے موجود ہے':'حاضری Firebase میں محفوظ ہوگئی');if(navigator.vibrate)navigator.vibrate(100)}
+$('manualForm').onsubmit=async e=>{e.preventDefault();try{let roll=$('manualRoll').value.trim(),s=students.find(x=>x.status!=='left'&&String(x.roll||'').trim().toLowerCase()===roll.toLowerCase());if(!s)throw Error('رول نمبر لوڈ شدہ طلبہ میں نہیں ملا');await mark(s.id);$('manualRoll').value=''}catch(e){err(e)}};
+$('stop').onclick=stopCamera;$('start').onclick=async()=>{if(stream)return;if(typeof jsQR==='undefined')return notice('QR scanner library load نہیں ہوئی');if(!navigator.mediaDevices?.getUserMedia)return notice('کیمرہ کے لیے HTTPS یا localhost ضروری ہے');try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});$('video').srcObject=stream;await $('video').play();scanning=true;scan()}catch(e){stopCamera();err(e)}};
+const scanCanvas=document.createElement('canvas');async function scan(){if(!scanning)return;let v=$('video');if(v.readyState>=2&&v.videoWidth){let w=Math.min(v.videoWidth,600),h=Math.round(w*v.videoHeight/v.videoWidth);scanCanvas.width=w;scanCanvas.height=h;let c=scanCanvas.getContext('2d',{willReadFrequently:true});c.drawImage(v,0,0,w,h);let img=c.getImageData(0,0,w,h),result=jsQR(img.data,w,h);if(result?.data?.startsWith('SAIFATT1:')&&!marking){let now=Date.now();if(result.data!==lastCode||now-lastTime>3000){lastCode=result.data;lastTime=now;marking=true;mark(result.data.slice(9)).catch(err).finally(()=>{marking=false})}}}frame=requestAnimationFrame(scan)}
+async function getDay(date){let snap=await getDocs(query(collection(db,'attendance'),where('date','==',date)));return snap.docs.map(d=>d.data())}
+async function loadDashboard(){await loadStudents();let day=await getDay(dateKey()),set=new Set(day.map(a=>a.studentId));$('today').textContent=dateKey();let active=students.filter(s=>s.status!=='left');$('total').textContent=active.length;$('present').textContent=active.filter(s=>set.has(s.id)).length;$('absent').textContent=active.length-Number($('present').textContent)}
+async function loadReport(){await loadStudents();records=await getDay($('reportDate').value);renderReport()}
+function renderReport(){let map=new Map(records.map(a=>[a.studentId,a])),filter=$('reportClass').value.trim().toLowerCase(),list=students.filter(s=>(s.status!=='left'||(s.leftDate&&s.leftDate>$('reportDate').value))&&(!filter||String(s.className||'').toLowerCase().includes(filter)));$('reportRows').replaceChildren();let present=0;for(let s of list){let a=map.get(s.id);if(a)present++;let tr=document.createElement('tr');for(let v of [s.roll,s.name,s.className,s.section,a?'حاضر':'غیر حاضر',a?new Date(a.time).toLocaleTimeString('ur-PK'):'—']){let td=document.createElement('td');td.textContent=v||'';tr.append(td)}$('reportRows').append(tr)}$('reportSummary').textContent=`کل: ${list.length} | حاضر: ${present} | غیر حاضر: ${list.length-present}`}
+$('loadReport').onclick=()=>loadReport().catch(err);$('reportDate').onchange=()=>loadReport().catch(err);$('reportClass').oninput=renderReport;
+$('export').onclick=()=>{let map=new Map(records.map(a=>[a.studentId,a])),cl=$('reportClass').value.trim().toLowerCase(),rows=[['Roll','Name','Class','Section','Date','Status','Time']];students.filter(s=>(s.status!=='left'||(s.leftDate&&s.leftDate>$('reportDate').value))&&(!cl||String(s.className||'').toLowerCase().includes(cl))).forEach(s=>{let a=map.get(s.id);rows.push([s.roll,s.name,s.className,s.section,$('reportDate').value,a?'Present':'Absent',a?.time||''])});let csv='\ufeff'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download='attendance-'+$('reportDate').value+'.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+</script></body></html>
